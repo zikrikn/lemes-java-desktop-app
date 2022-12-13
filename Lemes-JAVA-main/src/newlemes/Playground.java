@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class Playground {
-
     public static void main(String[] args) {
         String pattern = "yyyy-MM-dd HH:mm";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);

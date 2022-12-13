@@ -23,19 +23,7 @@ public class NotifikasiJob implements Job {
         String date = simpleDateFormat.format(new Date()); //this time now
         String d = date.substring(0, 10);//divide the date and time into 2 parts
 
-        //So we can make the waktuKeluar jadi date dulu after that we can add the time then makes it to be string again
-
         try {
-            //Can we have multiple execute in jdbc?
-            //This can be pop up notification but also put the data to the new table
-            //I don't think we need multiple select execute tho, so the easiest way is directly compare them
-
-            //So basically its same as RPL IMPAL
-            //Pasang aja triggernya di waktu dan kondisi yang ditentukan
-            //Try it tho
-            //we have to make same as IMPAL karena untuk keluarnya tepat waktu yang ditentukan kita
-
-            // So just tanggal untuk waktuKeluar
             String sql = "SELECT * FROM notifikasiIn WHERE waktuKeluar == ?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, d);
@@ -44,10 +32,15 @@ public class NotifikasiJob implements Job {
 
             String dateKeluar = rs.getString("waktuKeluar");
 
-            // DB String Date to 
+            // DB String to Date
             Date restockH1 = simpleDateFormat.parse(dateKeluar);
             Date pakanH1 = simpleDateFormat.parse(dateKeluar);
             Date pakanH3 = simpleDateFormat.parse(dateKeluar);
+
+
+            Date hari8 = simpleDateFormat.parse(dateKeluar);
+            Date hari12 = simpleDateFormat.parse(dateKeluar);
+            Date hari17 = simpleDateFormat.parse(dateKeluar);
 
             // Convert Date to Calendar
             Calendar r1 = Calendar.getInstance();
@@ -62,6 +55,19 @@ public class NotifikasiJob implements Job {
             c2.setTime(pakanH1);
             c2.add(Calendar.DATE, -1);
 
+            // Convert Date to Calendar Harian
+            Calendar h8 = Calendar.getInstance();
+            h8.setTime(hari8);
+            h8.add(Calendar.HOUR, 8);
+
+            Calendar h12 = Calendar.getInstance();
+            h12.setTime(hari12);
+            h12.add(Calendar.HOUR, 12);
+
+            Calendar h17 = Calendar.getInstance();
+            h17.setTime(hari17);
+            h17.add(Calendar.HOUR, 17);
+
             // Convert calendar back to Date
             Date currentRestockH1 = r1.getTime();
             String currentRestockH1new = simpleDateFormat.format(currentRestockH1);
@@ -72,15 +78,26 @@ public class NotifikasiJob implements Job {
             Date currentPakanH1 = c2.getTime();
             String currentPakanH1new = simpleDateFormat.format(currentPakanH1);
 
+            // Convert calendar back to Date Harian
+            Date currentH8 = h8.getTime();
+            String currentH8new = simpleDateFormat.format(currentH8);
+
+            Date currentH12 = h12.getTime();
+            String currentH12new = simpleDateFormat.format(currentH12);
+
+            Date currentH17 = h17.getTime();
+            String currentH17new = simpleDateFormat.format(currentH17);
+
+
             // Kayanya ini dibuat beda class 
             while(rs.next()){
                 if (rs.getString("tipe") == "Harian"){
-                    if (dateKeluar == d + " 08:00"){
+                    if (currentH8new == d + " 08:00"){
                         // this will be the pop up thing
                         System.out.println("Reminder untuk memberi pakan pada Pagi hari!");
-                    }else if (dateKeluar == d + " 12:00"){   
+                    }else if (currentH12new == d + " 12:00"){   
                         System.out.println("Reminder untuk memberi pakan ");
-                    }else if (dateKeluar == d + " 17:00"){
+                    }else if (currentH17new == d + " 17:00"){
                         System.out.println("Reminder untuk memberi pakan pada Siang hari!");
                     }
                 }
@@ -93,11 +110,11 @@ public class NotifikasiJob implements Job {
                 }
 
                 if (rs.getString("tipe") == "Pakan"){
-                    if (currentPakanH3new == d + " 09:01"){
+                    if (currentPakanH3new == d + " 09:00"){
                         System.out.println("Reminder H-2 Sebelum Panen");
-                    }else if (currentPakanH1new == d + " 09:01"){
+                    }else if (currentPakanH1new == d + " 09:00"){
                         System.out.println("Reminder H-1 Sebelum ");
-                    }else if (dateKeluar == d + " 09:01"){
+                    }else if (dateKeluar == d + " 09:00"){
                         System.out.println("Waktunya Panen!");
                     }
                 }
