@@ -28,32 +28,34 @@ public class Notifikasi {
     public void createTableNotifikasi() {
         String sql = "CREATE TABLE notifikasiIn (" +
             "notifikasiID	TEXT NOT NULL," +
-            // "userID	        TEXT NOT NULL," +
+            "username       TEXT NOT NULL," +
             "tipe	        TEXT NOT NULL," +
             "waktuMasuk	    TEXT NOT NULL," +
             "waktuKeluar	TEXT NOT NULL," +
-            "messages       TEXT NOT NULL)";
+            "messages       TEXT NOT NULL," +
+            "FOREIGN KEY (username) REFERENCES users(username));";
 
         try (Connection conn = Connector.connect(); 
         Statement stmt = conn.createStatement()){
             stmt.executeUpdate(sql);
             System.out.println("Table NotifikasiIn Berhasil Dibuat!");
+            Connector.disconnect();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
     
     //How about make new notifications
-    public void notifikasiIn(String tipe){
-        String sql = "INSERT INTO notifikasiIn (notifikasiID, tipe, waktuMasuk, waktuKeluar, messages) VALUES (?,?,?,?,?)";
+    public void notifikasiIn(String username, String tipe){
+        String sql = "INSERT INTO notifikasiIn (notifikasiID, tipe, waktuMasuk, waktuKeluar, messages) VALUES (?,?,?,?,?) WHERE username == ?";
 
         try (Connection conn = Connector.connect();
         PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setString(1, uuidAsString);
-            // pstmt.setString(2, userID);
             pstmt.setString(2, tipe);
             pstmt.setString(3, date);
+            pstmt.setString(6, username);
             
             if (tipe == "Harian"){
                 //create instance of the Calendar class and set the date to the given date  
@@ -108,22 +110,21 @@ public class Notifikasi {
             }
 
             pstmt.executeUpdate();
-
-            pstmt.close();
-            conn.close();
+            Connector.disconnect();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public void notifikasiList() {
+    public void notifikasiList(String username) {
         //We have to create a new table to store the notification data that the final one
         //This one for all of notifications
-        String sql = "SELECT * FROM notifikasiIn WHERE waktuMasuk >= ?";
+        String sql = "SELECT * FROM notifikasiIn WHERE waktuMasuk >= ? and username = ?";
 
         try (Connection conn = Connector.connect();
         PreparedStatement pstmt  = conn.prepareStatement(sql)){
             pstmt.setString(1, date);
+            pstmt.setString(2, username);
 
             ResultSet rs = pstmt.executeQuery();
 
@@ -132,6 +133,7 @@ public class Notifikasi {
                 System.out.println(rs.getString("waktuKeluar"));
                 System.out.println(rs.getString("messages"));
             }
+            Connector.disconnect();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

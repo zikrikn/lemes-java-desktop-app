@@ -1,6 +1,14 @@
 package newlemes;
 
 import java.util.*;
+import org.quartz.SchedulerException;
+import org.quartz.CronScheduleBuilder;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
+import org.quartz.impl.StdSchedulerFactory;
 
 public class MenuUser {
     Kolam kolam = new Kolam();
@@ -21,12 +29,21 @@ public class MenuUser {
         System.out.print("Pilih Menu : ");
     }
 
-    public void pilihMenu(){
+    public void pilihMenu(String username) throws SchedulerException{
+        JobDetail job = JobBuilder.newJob(NotifikasiJob.class).build();
+
+        //Cron Trigger
+        Trigger t1 = TriggerBuilder.newTrigger().withIdentity("CronTrigger").withSchedule(CronScheduleBuilder.cronSchedule("0 0/1 * 1/1 * ? *")).build();
+    
+        Scheduler sc = StdSchedulerFactory.getDefaultScheduler();
+    
+        sc.start();
+        sc.scheduleJob(job, t1);
         menu();
         int pilih = scan.nextInt();
         while  (pilih != 0){
             if (pilih == 1){
-                kolam.displayAllKolam();
+                kolam.displayAllKolam(username);
                 
                 menu();
                 pilih = scan.nextInt();
@@ -41,7 +58,7 @@ public class MenuUser {
                 String newTanggal = scan.next();
                 System.out.println();
 
-                kolam.inputDataKolam(newNama, newBerat, newJumlah, newTanggal);
+                kolam.inputDataKolam(username, newNama, newBerat, newJumlah, newTanggal);
                 
                 menu();
                 pilih = scan.nextInt();
@@ -57,14 +74,14 @@ public class MenuUser {
                 pilih = scan.nextInt();
             }else if(pilih == 5){
 
-                notifikasi.notifikasiList();
+                notifikasi.notifikasiList(username);
                 menu();
                 pilih = scan.nextInt();
             }else if (pilih == 6) {
                 System.out.print("Masukkan Nama Kolam yang ingin dicari : ");
                 String cari = scan.next();
 
-                kolam.searchKolam(cari);                
+                kolam.searchKolam(username, cari);                
                 menu();
                 pilih = scan.nextInt();
             }else{

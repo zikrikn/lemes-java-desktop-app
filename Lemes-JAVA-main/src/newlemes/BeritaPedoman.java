@@ -17,6 +17,7 @@ public class BeritaPedoman {
 
         try (Connection conn = Connector.connect(); Statement stmt = conn.createStatement()){
             stmt.execute(sql);
+            Connector.disconnect();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -37,6 +38,7 @@ public class BeritaPedoman {
             pstmt.executeUpdate();
             
             System.out.println("\nArtikel Berhasil Diinputkan!");
+            Connector.disconnect();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -56,7 +58,7 @@ public class BeritaPedoman {
                                 rs.getString("isi") + "\t" +
                                 rs.getString("File"));
             }
-            
+            Connector.disconnect();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

@@ -11,9 +11,11 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
+// I think we have to create disconnect db too, to make it smooth!
 // untuk memberikan pemberitahuan notifikasi tepat waktu
 
 public class NotifikasiJob implements Job {
+    Auth auth = new Auth();
 
     @Override
     public void execute(JobExecutionContext jec) throws JobExecutionException {
@@ -22,11 +24,14 @@ public class NotifikasiJob implements Job {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         String date = simpleDateFormat.format(new Date()); //this time now
         String d = date.substring(0, 10);//divide the date and time into 2 parts
+        String uname = auth.getTitipUsername();
 
         try {
-            String sql = "SELECT * FROM notifikasiIn WHERE waktuKeluar == ?";
+            String sql = "SELECT * FROM notifikasiIn WHERE waktuKeluar == ? and username == ?"; //ini masih salah karena usernamenya gimana dapetnya?
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, d);
+            pstmt.setString(2, uname);
+            
 
             ResultSet rs = pstmt.executeQuery();
 
@@ -36,7 +41,6 @@ public class NotifikasiJob implements Job {
             Date restockH1 = simpleDateFormat.parse(dateKeluar);
             Date pakanH1 = simpleDateFormat.parse(dateKeluar);
             Date pakanH3 = simpleDateFormat.parse(dateKeluar);
-
 
             Date hari8 = simpleDateFormat.parse(dateKeluar);
             Date hari12 = simpleDateFormat.parse(dateKeluar);
@@ -96,9 +100,9 @@ public class NotifikasiJob implements Job {
                         // this will be the pop up thing
                         System.out.println("Reminder untuk memberi pakan pada Pagi hari!");
                     }else if (currentH12new == d + " 12:00"){   
-                        System.out.println("Reminder untuk memberi pakan ");
-                    }else if (currentH17new == d + " 17:00"){
                         System.out.println("Reminder untuk memberi pakan pada Siang hari!");
+                    }else if (currentH17new == d + " 17:00"){
+                        System.out.println("Reminder untuk memberi pakan pada Sore hari!");
                     }
                 }
 
@@ -114,7 +118,7 @@ public class NotifikasiJob implements Job {
                         System.out.println("Reminder H-2 Sebelum Panen");
                     }else if (currentPakanH1new == d + " 09:00"){
                         System.out.println("Reminder H-1 Sebelum ");
-                    }else if (dateKeluar == d + " 09:00"){
+                    }else if (dateKeluar == d + " 09:00"){ // dateKeluar adalah waktu keluar dari database yang mana berbeda-beda
                         System.out.println("Waktunya Panen!");
                     }
                 }

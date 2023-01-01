@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch Kolam",
+            "request": "launch",
+            "mainClass": "newlemes.Kolam",
+            "projectName": "Lemes-JAVA-main_2bfb2df6"
+        },
+        {
+            "type": "java",
             "name": "Launch Notifikasi",
             "request": "launch",
             "mainClass": "newlemes.Notifikasi",
