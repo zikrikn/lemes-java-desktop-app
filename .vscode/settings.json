@@ -1,0 +1,12 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\Zikri\\Downloads\\sqlite-jdbc-3.39.4.1.jar",
+        "c:\\Users\\Zikri\\Downloads\\quartz-2.3.0-distribution.tar\\quartz-2.3.0-distribution\\quartz-2.3.0-SNAPSHOT\\lib\\c3p0-0.9.5.2.jar",
+        "c:\\Users\\Zikri\\Downloads\\quartz-2.3.0-distribution.tar\\quartz-2.3.0-distribution\\quartz-2.3.0-SNAPSHOT\\lib\\log4j-1.2.16.jar",
+        "c:\\Users\\Zikri\\Downloads\\quartz-2.3.0-distribution.tar\\quartz-2.3.0-distribution\\quartz-2.3.0-SNAPSHOT\\lib\\quartz-2.3.0-SNAPSHOT.jar",
+        "c:\\Users\\Zikri\\Downloads\\quartz-2.3.0-distribution.tar\\quartz-2.3.0-distribution\\quartz-2.3.0-SNAPSHOT\\lib\\quartz-jobs-2.3.0-SNAPSHOT.jar",
+        "c:\\Users\\Zikri\\Downloads\\quartz-2.3.0-distribution.tar\\quartz-2.3.0-distribution\\quartz-2.3.0-SNAPSHOT\\lib\\slf4j-api-1.7.7.jar",
+        "c:\\Users\\Zikri\\Downloads\\quartz-2.3.0-distribution.tar\\quartz-2.3.0-distribution\\quartz-2.3.0-SNAPSHOT\\lib\\slf4j-log4j12-1.7.7.jar"
+    ]
+}
