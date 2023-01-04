@@ -78,8 +78,6 @@ public class MenuUser {
                 System.out.print("Stock Pakan\t: ");
                 int newStockPakan = scan.nextInt();
                 setStockPakan(newStockPakan);
-                System.out.print("Tanggal Awal Tebar Benih : ");
-                String newTanggal = scan.next();
                 System.out.println();
 
                 int jumlahPakanHarian = Function.hitungJumlahPakan(newJumlah, newBerat, 3.5, 0.07, newStockPakan);
