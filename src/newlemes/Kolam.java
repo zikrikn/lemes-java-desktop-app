@@ -1,21 +1,29 @@
 package newlemes;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Kolam {
     private Notifikasi notifikasi = new Notifikasi();
+
+    String pattern = "yyyy-MM-dd HH:mm";
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+    String date = simpleDateFormat.format(new Date()); //this time now
 
     //Nanti buat login untuk mengklasifikasi hasilnya berdasarkan user
     public void createTableKolam() {
         String sql = "CREATE TABLE IF NOT EXISTS kolam (" +
         "username TEXT NOT NULL, " +
-        "namakolam TEXT NOT NULL UNIQUE PRIMARY KEY," +
-        "jumlahlele INTEGER NOT NULL, " +
-        "beratlele INTEGER NOT NULL, " +
-        "tglTebarBenih TEXT NOT NULL," +
-        "takaranPakan INTEGER," +
-        "jumlahPakan INTEGER," +
-        "restockPakan INTEGER," +
+        "namaKolam TEXT NOT NULL UNIQUE PRIMARY KEY," +
+        "jumlahLele INTEGER NOT NULL, " +
+        "beratLele INTEGER NOT NULL, " +
+	    "stockPakan INTEGER NOT NULL, " +
+        "waktuTebar TEXT NOT NULL, " +
+        "jumlahPakanHarian INTEGER, " +
+	    "waktuPanen TEXT NOT NULL, " +
+        "waktuRestock TEXT, " +
         "CONSTRAINT kolam_fk1 FOREIGN KEY (username) REFERENCES users(username));";
 
         try (Connection conn = Connector.connect(); 
@@ -29,22 +37,28 @@ public class Kolam {
         }
     }
 
-    public void inputDataKolam(String username, String namakolam, int beratlele, int jumlahlele, String tglTebarBenih) {
-        String sql = "INSERT INTO kolam (username, namakolam, beratlele, jumlahlele, tglTebarBenih) VALUES(?,?,?,?,?)";
+    public void inputDataKolam(String username, String namaKolam, int jumlahLele, int beratLele, int stockPakan) throws ParseException {
+        String sql = "INSERT INTO kolam (username, namaKolam, jumlahLele, beratLele, stockPakan, waktuTebar, jumlahPakanHarian, waktuPanen) VALUES(?,?,?,?,?,?,?,?)";
         Connection conn = null;
         try {
             conn = Connector.connect();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             
             pstmt.setString(1, username);
-            pstmt.setString(2, namakolam);
-            pstmt.setInt(3, beratlele);
-            pstmt.setInt(4, jumlahlele);
-            pstmt.setString(5, tglTebarBenih);
+            pstmt.setString(2, namaKolam);
+            pstmt.setInt(3, jumlahLele);
+            pstmt.setInt(4, beratLele);
+            pstmt.setInt(5, stockPakan);
+            pstmt.setString(6, date);
+
+            int jumlahPakanHarian = Function.hitungJumlahPakan(jumlahLele, beratLele, 3.5, 0.07, stockPakan);
+            pstmt.setInt(7, jumlahPakanHarian);
+
+            String waktuPanenKolam = Function.waktuPanen(jumlahPakanHarian, 60, date);
+            pstmt.setString(8, waktuPanenKolam);
 
             // Harus membuat logic untuk menghitung takaran pakan
             pstmt.executeUpdate();
-
             Connector.disconnect();
 
             // Untuk menambahkan data ke table db notifikasi, untuk harian dan panen
@@ -58,19 +72,19 @@ public class Kolam {
     }
 
     public void displayAllKolam(String username) {
-        String sql = "SELECT * FROM kolam WHERE username == ?";
+        String sql = "SELECT * FROM kolam WHERE username = ?";
 
         try (Connection conn = Connector.connect();
         PreparedStatement pstmt  = conn.prepareStatement(sql)){;
             pstmt.setString(1, username);
             ResultSet rs    = pstmt.executeQuery();
 
-            System.out.println("Nama Kolam " + " Berat Lele" + " Jumlah Lele" + " Tanggal Tebar Benih");
+            System.out.println("Nama Kolam " + " Berat Lele" + " Jumlah Lele" + " Tanggal Awal Tebar Benih");
             while (rs.next()){
-                System.out.println(rs.getString("namakolam") + "\t\t" + 
-                rs.getInt("beratlele") + "\t" +
-                rs.getInt("jumlahlele") + "\t\t" + 
-                rs.getString("tglTebarBenih"));
+                System.out.println(rs.getString("namaKolam") + "\t\t" + 
+                rs.getInt("beratLele") + "\t" +
+                rs.getInt("jumlahLele") + "\t\t" + 
+                rs.getString("waktuTebar"));
             }
             Connector.disconnect();
         } catch (SQLException e) {
@@ -79,7 +93,7 @@ public class Kolam {
     }
 
     public void searchKolam(String username, String namaKolam) {
-        String sql = "SELECT * FROM kolam WHERE namakolam == ? and username == ?";
+        String sql = "SELECT * FROM kolam WHERE namaKolam = ? and username = ?";
 
         try (Connection conn = Connector.connect(); 
         PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -100,38 +114,35 @@ public class Kolam {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        
     }
 
-    public void RestockPakan(String username, String namaKolam, int jumlahPakan) {
-        String sql = "UPDATE kolam SET jumlahPakan = ?, restockPakan = ? WHERE namakolam = ? and username = ?";
-        // UPDATE kolam SET jumlahPakan = 12121, restockPakan = 12122 WHERE namakolam == "hi";
+    public void RestockPakan(String username, String namaKolam, double stockPakan, int jumlahPakanHarian) {
+        String sql = "UPDATE kolam SET waktuRestock = ? WHERE namaKolam = ? and username = ?";
+
         try (Connection conn = Connector.connect();
         PreparedStatement pstmt = conn.prepareStatement(sql)){
-            // Seperti IMPAL this is just update the table
-            pstmt.setInt(1, jumlahPakan);
             // We have to make a logic to calculate in this program
-            pstmt.setInt(2, 7171);
+            String waktuRestockPakan = Function.waktuRestock(stockPakan, jumlahPakanHarian);
+            pstmt.setString(2, waktuRestockPakan);
             pstmt.setString(3, namaKolam);
             pstmt.setString(4, username);
 
             // Masukan logic untuk restock
             // Untuk menambahkan data ke table db notifikasi
             pstmt.executeUpdate();
+            Connector.disconnect();
             notifikasi.notifikasiIn(username, "Restock");
             System.out.println("Restock berhasil diupdate!");
-            Connector.disconnect();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
     public static void main(String[] args) {
-        Kolam newKolam = new Kolam();
+        // Kolam newKolam = new Kolam();
 
         // Masih belum bisa diupdate
         // newKolam.createTableKolam();
-        newKolam.RestockPakan("fikri", "kolam2", 28282);
         // newKolam.displayAllKolam("fikri");
         // newKolam.inputDataKolam("fikri", "kolam2", 25, 1000, "2020-12-12");
     }

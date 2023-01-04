@@ -1,5 +1,6 @@
 package newlemes;
 
+import java.text.ParseException;
 import java.util.*;
 import org.quartz.SchedulerException;
 import org.quartz.CronScheduleBuilder;
@@ -11,6 +12,25 @@ import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
 public class MenuUser {
+    private double stockPakan;
+    private int jumlahPakanHarian;
+
+    public double getStockPakan() {
+        return stockPakan;
+    }
+
+    public void setStockPakan(double stockPakan) {
+        this.stockPakan = stockPakan;
+    }
+
+    public int getJumlahPakanHarian() {
+        return jumlahPakanHarian;
+    }
+
+    public void setJumlahPakanHarian(int jumlahPakanHarian) {
+        this.jumlahPakanHarian = jumlahPakanHarian;
+    }
+
     Kolam kolam = new Kolam();
     BeritaPedoman beritaPedoman = new BeritaPedoman();
     Scanner scan = new Scanner(System.in);
@@ -51,15 +71,25 @@ public class MenuUser {
             }else if(pilih == 2){
                 System.out.print("Nama Kolam\t: ");
                 String newNama = scan.next();
-                System.out.print("Berat Lele\t: ");
-                int newBerat = scan.nextInt();
                 System.out.print("Jumlah Lele\t: ");
                 int newJumlah = scan.nextInt();
+                System.out.print("Berat Lele\t: ");
+                int newBerat = scan.nextInt();
+                System.out.print("Stock Pakan\t: ");
+                int newStockPakan = scan.nextInt();
+                setStockPakan(newStockPakan);
                 System.out.print("Tanggal Awal Tebar Benih : ");
                 String newTanggal = scan.next();
                 System.out.println();
 
-                kolam.inputDataKolam(username, newNama, newBerat, newJumlah, newTanggal);
+                int jumlahPakanHarian = Function.hitungJumlahPakan(newJumlah, newBerat, 3.5, 0.07, newStockPakan);
+                setJumlahPakanHarian(jumlahPakanHarian);
+
+                try {
+                    kolam.inputDataKolam(username, newNama, newJumlah, newBerat, newStockPakan);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 
                 menu();
                 pilih = scan.nextInt();
@@ -88,10 +118,9 @@ public class MenuUser {
             }else if (pilih == 7){
                 System.out.print("Masukkan Nama Kolam : ");
                 String namaKolam = scan.next();
-                System.out.print("Masukkan Jumlah Pakan : ");
-                int jumlahPakan = scan.nextInt();
                 
-                kolam.RestockPakan(username, namaKolam, jumlahPakan);
+                kolam.RestockPakan(username, namaKolam, getStockPakan(), getJumlahPakanHarian());
+                
                 menu();
                 pilih = scan.nextInt();
             }else{
