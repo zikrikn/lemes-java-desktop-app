@@ -129,9 +129,7 @@ public class Notifikasi {
             pstmt.setString(1, username);
 
             ResultSet rs = pstmt.executeQuery();
-            System.out.println("Notifikasi Berhasil Ditampilkan!");
             while (rs.next()){
-                System.out.println("Notifikasi Berhasil Ditampilkan!");
                 System.out.println(rs.getString("tipe"));
                 System.out.println(rs.getString("waktuKeluar"));
                 System.out.println(rs.getString("messages"));

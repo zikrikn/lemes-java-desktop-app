@@ -12,6 +12,8 @@ public class Kolam {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
     String date = simpleDateFormat.format(new Date()); //this time now
 
+    // The error would get fixed by the GUI
+
     //Nanti buat login untuk mengklasifikasi hasilnya berdasarkan user
     public void createTableKolam() {
         String sql = "CREATE TABLE IF NOT EXISTS kolam (" +
@@ -103,10 +105,10 @@ public class Kolam {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()){
-                System.out.println(rs.getString("namakolam") + "\t" + 
-                rs.getInt("beratlele") + "\t" + 
-                rs.getInt("jumlahlele") + "\t" +
-                rs.getString("tglTebarBenih"));
+                System.out.println(rs.getString("namaKolam") + "\t\t" + 
+                rs.getInt("beratLele") + "\t" +
+                rs.getInt("jumlahLele") + "\t\t" + 
+                rs.getString("waktuTebar"));
             }else {
                 System.out.println("Data Kolam Terkait Tidak Ditemukan!");
             }
@@ -116,16 +118,41 @@ public class Kolam {
         }
     }
 
-    public void RestockPakan(String username, String namaKolam, double stockPakan, int jumlahPakanHarian) {
+    public int[] findUsername(String username, String namaKolam) {
+        int[] numbers = new int[2];
+        String sql = "SELECT stockPakan, jumlahPakanHarian FROM kolam WHERE namaKolam = ? and username = ?";
+
+        try (Connection conn = Connector.connect(); 
+        PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1, namaKolam);
+            pstmt.setString(2, username);
+
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()){
+                numbers[0] = rs.getInt("stockPakan");
+                numbers[1] = rs.getInt("jumlahPakanHarian");
+                //return numbers;
+            }else {
+                System.out.println("Data Kolam Terkait Tidak Ditemukan!");
+            }
+            Connector.disconnect();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return numbers;
+    }
+
+    public void RestockPakan(String username, String namaKolam, int stockPakan, int jumlahPakanHarian) {
         String sql = "UPDATE kolam SET waktuRestock = ? WHERE namaKolam = ? and username = ?";
 
         try (Connection conn = Connector.connect();
         PreparedStatement pstmt = conn.prepareStatement(sql)){
             // We have to make a logic to calculate in this program
             String waktuRestockPakan = Function.waktuRestock(stockPakan, jumlahPakanHarian);
-            pstmt.setString(2, waktuRestockPakan);
-            pstmt.setString(3, namaKolam);
-            pstmt.setString(4, username);
+            pstmt.setString(1, waktuRestockPakan);
+            pstmt.setString(2, namaKolam);
+            pstmt.setString(3, username);
 
             // Masukan logic untuk restock
             // Untuk menambahkan data ke table db notifikasi
@@ -141,9 +168,12 @@ public class Kolam {
     public static void main(String[] args) {
         // Kolam newKolam = new Kolam();
 
+        // int[] numbers = newKolam.findUsername("fikri", "kolam1");
+        // System.out.println(numbers[0]);
+        // System.out.println(numbers[1]);
         // Masih belum bisa diupdate
         // newKolam.createTableKolam();
         // newKolam.displayAllKolam("fikri");
-        // newKolam.inputDataKolam("fikri", "kolam2", 25, 1000, "2020-12-12");
+        // newKolam.RestockPakan("fikri", "kolam1", 1000, 200);
     }
 }

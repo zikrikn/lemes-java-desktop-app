@@ -8,7 +8,7 @@ import java.util.TimeZone;
 
 public class Function {
     // Fungsi untuk menghitung jumlah pakan harian lele
-    public static int hitungJumlahPakan(int jumlahLele, double beratLele, double kandunganEnergi, double faktorKonversi, double stockPakan) {
+    public static int hitungJumlahPakan(int jumlahLele, double beratLele, double kandunganEnergi, double faktorKonversi, int stockPakan) {
         // Hitung berat total lele
         double beratTotalLele = jumlahLele * beratLele;
         // Hitung jumlah pakan yang dibutuhkan dengan rumus yang disebutkan sebelumnya
@@ -24,14 +24,14 @@ public class Function {
         }
     }
 
-    public static String waktuRestock(double stockPakan, int jumlahPakanHarian) {
+    public static String waktuRestock(int stockPakan, int jumlahPakanHarian) {
         // Jika sisa stok kurang dari 0, maka waktu reminder restock adalah sekarang
         if (stockPakan < 0) {
             Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Asia/Jakarta"));
             Date waktuReminderRestock = cal.getTime();
             
             // Buat objek SimpleDateFormat dengan format tanggal yang diinginkan
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             
             // Ubah objek Date ke String dengan menggunakan format() method
             String waktuReminderRestockString = formatter.format(waktuReminderRestock);
@@ -47,7 +47,7 @@ public class Function {
             Date waktuReminderRestock = cal.getTime();
             
             // Buat objek SimpleDateFormat dengan format tanggal yang diinginkan
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             
             // Ubah objek Date ke String dengan menggunakan format() method
             String waktuReminderRestockString = formatter.format(waktuReminderRestock);
@@ -58,7 +58,7 @@ public class Function {
     
     public static String waktuPanen(int jumlahPakanHarian, double lamaPanen, String tanggalInput) throws ParseException {
         // Buat objek SimpleDateFormat dengan format tanggal yang diinginkan
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         
         // Ubah String ke objek Date dengan menggunakan parse() method
         Date waktuPanenInput = formatter.parse(tanggalInput);
@@ -73,7 +73,7 @@ public class Function {
         Date waktuPanen = cal.getTime();
         
         // Buat objek SimpleDateFormat dengan format tanggal yang diinginkan
-        SimpleDateFormat formatter2 = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         
         // Ubah objek Date ke String dengan menggunakan format() method
         String waktuPanenString = formatter2.format(waktuPanen);

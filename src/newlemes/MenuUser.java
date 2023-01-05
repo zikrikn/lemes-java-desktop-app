@@ -12,14 +12,14 @@ import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
 public class MenuUser {
-    private double stockPakan;
+    private int stockPakan;
     private int jumlahPakanHarian;
 
-    public double getStockPakan() {
+    public int getStockPakan() {
         return stockPakan;
     }
 
-    public void setStockPakan(double stockPakan) {
+    public void setStockPakan(int stockPakan) {
         this.stockPakan = stockPakan;
     }
 
@@ -117,7 +117,11 @@ public class MenuUser {
                 System.out.print("Masukkan Nama Kolam : ");
                 String namaKolam = scan.next();
                 
-                kolam.RestockPakan(username, namaKolam, getStockPakan(), getJumlahPakanHarian());
+                int[] numbers = kolam.findUsername(username, namaKolam);
+                System.out.println("Stock Pakan : " + numbers[0]);
+                System.out.println("Jumlah Pakan Harian : " + numbers[1]);
+                
+                kolam.RestockPakan(username, namaKolam, numbers[0], numbers[1]);
                 
                 menu();
                 pilih = scan.nextInt();

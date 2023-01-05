@@ -30,7 +30,6 @@ public class MenuAwal {
 
                 menu();
                 pilih = scan.nextInt();
-
             }else if(pilih == 2){
                 System.out.print("\nUsername\t: ");
                 String username = scan.next();

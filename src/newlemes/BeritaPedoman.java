@@ -1,19 +1,24 @@
 package newlemes;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class BeritaPedoman {
+    String pattern = "yyyy-MM-dd HH:mm";
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+    String date = simpleDateFormat.format(new Date()); //this time now
 
     public void createTableBeritaPedoman() {
         String sql = "CREATE TABLE BeritaPedoman (" 
-            + "BeritaPedomanID	INTEGER NOT NULL UNIQUE, "
-            + "Tipe     TEXT NOT NULL, " //Ini diisi hanya dengan "berita" atau "pedoman"
-            + "Judul	TEXT NOT NULL, "
-            + "Tanggal	TEXT NOT NULL, "
-            + "Isi	TEXT NOT NULL, "
-            + "File	TEXT, "
-            + "PRIMARY KEY(BeritaPedomanID)"
-            + ");";
+        + "BeritaPedomanID INTEGER NOT NULL UNIQUE, "
+        + "Tipe TEXT NOT NULL, " 
+        + "Judul TEXT NOT NULL, "
+        + "Tanggal TEXT NOT NULL, "
+        + "Isi TEXT NOT NULL, "
+        + "File TEXT, "
+        + "PRIMARY KEY (BeritaPedomanID AUTOINCREMENT)"
+        + ");";
 
         try (Connection conn = Connector.connect(); Statement stmt = conn.createStatement()){
             stmt.execute(sql);
@@ -24,16 +29,15 @@ public class BeritaPedoman {
         
     }
 
-    public void insertBeritaPedoman(int BeritaPedomanID, String tipe, String judul, String tanggal, String isi, String file) {
-        String sql = "INSERT INTO BeritaPedoman (BeritaPedomanID, Tipe, Judul, Tanggal, Isi, File) VALUES(?,?,?,?,?,?)";
+    public void insertBeritaPedoman(String tipe, String judul, String isi, String file) {
+        String sql = "INSERT INTO BeritaPedoman (Tipe, Judul, Tanggal, Isi, File) VALUES(?,?,?,?,?)";
 
         try (Connection conn = Connector.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setInt(1, BeritaPedomanID);
-            pstmt.setString(2, tipe);
-            pstmt.setString(3, judul);
-            pstmt.setString(4, tanggal);
-            pstmt.setString(5, isi);
-            pstmt.setString(6, file);
+            pstmt.setString(1, tipe);
+            pstmt.setString(2, judul);
+            pstmt.setString(3,  date);
+            pstmt.setString(4, isi);
+            pstmt.setString(5, file);
 
             pstmt.executeUpdate();
             
@@ -62,6 +66,12 @@ public class BeritaPedoman {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        
+    }
+
+    public static void main(String[] args) {
+        // BeritaPedoman beritaPedoman = new BeritaPedoman();
+        // beritaPedoman.createTableBeritaPedoman();
+        // beritaPedoman.insertBeritaPedoman("berita", "Judul", "Tanggal", "Isi", "File");
+        // beritaPedoman.viewBeritaPedoman("berita");
     }
 }
