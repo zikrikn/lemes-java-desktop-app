@@ -64,8 +64,8 @@ public class Kolam {
             Connector.disconnect();
 
             // Untuk menambahkan data ke table db notifikasi, untuk harian dan panen
-            notifikasi.notifikasiIn(username, "Harian");
-            notifikasi.notifikasiIn(username, "Panen");
+            notifikasi.notifikasiIn(username, "Harian", waktuPanenKolam);
+            notifikasi.notifikasiIn(username, "Panen", waktuPanenKolam);
 
             System.out.println("Data Kolam Baru Berhasil Diinputkan!");
         } catch (SQLException e) {
@@ -143,7 +143,7 @@ public class Kolam {
         return numbers;
     }
 
-    public void RestockPakan(String username, String namaKolam, int stockPakan, int jumlahPakanHarian) {
+    public void RestockPakan(String username, String namaKolam, int stockPakan, int jumlahPakanHarian) throws ParseException{
         String sql = "UPDATE kolam SET waktuRestock = ? WHERE namaKolam = ? and username = ?";
 
         try (Connection conn = Connector.connect();
@@ -158,7 +158,7 @@ public class Kolam {
             // Untuk menambahkan data ke table db notifikasi
             pstmt.executeUpdate();
             Connector.disconnect();
-            notifikasi.notifikasiIn(username, "Restock");
+            notifikasi.notifikasiIn(username, "Restock", waktuRestockPakan);
             System.out.println("Restock berhasil diupdate!");
         } catch (SQLException e) {
             System.out.println(e.getMessage());

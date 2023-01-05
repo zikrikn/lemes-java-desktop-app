@@ -46,7 +46,7 @@ public class Notifikasi {
     }
     
     //How about make new notifications
-    public void notifikasiIn(String username, String tipe){
+    public void notifikasiIn(String username, String tipe, String waktuKeluar) throws ParseException{
         String sql = "INSERT INTO notifikasiIn (notifikasiID, tipe, waktuMasuk, waktuKeluar, messages, username) VALUES (?,?,?,?,?,?)";
 
         try (Connection conn = Connector.connect();
@@ -71,7 +71,7 @@ public class Notifikasi {
 
                 pstmt.setString(4, dateAfter);
 
-                pstmt.setString(5, "Notifikasi harian aktif! Kamu akan mendapatkan notifikasi 3 kali sehari sampai tanggal 23 September 2022.");
+                pstmt.setString(5, "Notifikasi harian aktif! Kamu akan mendapatkan notifikasi 3 kali sehari sampai tanggal" + waktuKeluar);
             }else if (tipe.equals("Panen")){
                 //create instance of the Calendar class and set the date to the given date  
                 Calendar cal = Calendar.getInstance();  

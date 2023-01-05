@@ -27,7 +27,7 @@ public class NotifikasiJob implements Job {
         String uname = auth.getTitipUsername();
 
         try {
-            String sql = "SELECT * FROM notifikasiIn WHERE waktuKeluar == ? and username == ?"; //ini masih salah karena usernamenya gimana dapetnya?
+            String sql = "SELECT * FROM notifikasiIn WHERE waktuKeluar = ? and username = ?"; //ini masih salah karena usernamenya gimana dapetnya?
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, d);
             pstmt.setString(2, uname);
