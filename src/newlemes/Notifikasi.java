@@ -27,7 +27,7 @@ public class Notifikasi {
 
     public void createTableNotifikasi() {
         String sql = "CREATE TABLE notifikasiIn (" +
-            "notifikasiID	TEXT NOT NULL," +
+            "notifikasiID	TEXT NOT NULL PRIMARY KEY," +
             "username       TEXT NOT NULL," +
             "tipe	        TEXT NOT NULL," +
             "waktuMasuk	    TEXT NOT NULL," +
@@ -143,10 +143,10 @@ public class Notifikasi {
     }
 
     public static void main(String[] args) {
-        Notifikasi notifikasi = new Notifikasi();
-        //notifikasi.createTableNotifikasi();
+        // Notifikasi notifikasi = new Notifikasi();
+        // notifikasi.createTableNotifikasi();
 
         // notifikasi.notifikasiIn("fikri", "Harian");
-        notifikasi.notifikasiList("fikri");
+        // notifikasi.notifikasiList("fikri");
     }
 }
