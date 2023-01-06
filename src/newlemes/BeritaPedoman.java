@@ -16,7 +16,6 @@ public class BeritaPedoman {
         + "Judul TEXT NOT NULL, "
         + "Tanggal TEXT NOT NULL, "
         + "Isi TEXT NOT NULL, "
-        + "File TEXT, "
         + "PRIMARY KEY (BeritaPedomanID AUTOINCREMENT)"
         + ");";
 
@@ -29,15 +28,14 @@ public class BeritaPedoman {
         
     }
 
-    public void insertBeritaPedoman(String tipe, String judul, String isi, String file) {
-        String sql = "INSERT INTO BeritaPedoman (Tipe, Judul, Tanggal, Isi, File) VALUES(?,?,?,?,?)";
+    public void insertBeritaPedoman(String tipe, String judul, String isi) {
+        String sql = "INSERT INTO BeritaPedoman (Tipe, Judul, Tanggal, Isi) VALUES(?,?,?,?)";
 
         try (Connection conn = Connector.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setString(1, tipe);
             pstmt.setString(2, judul);
-            pstmt.setString(3,  date);
+            pstmt.setString(3, date);
             pstmt.setString(4, isi);
-            pstmt.setString(5, file);
 
             pstmt.executeUpdate();
             
@@ -49,7 +47,7 @@ public class BeritaPedoman {
     }
 
     public void viewBeritaPedoman(String pickBeritaPedoman) {
-        String sql = "SELECT Judul, Tanggal, Isi, File FROM BeritaPedoman WHERE Tipe == ?";
+        String sql = "SELECT Judul, Tanggal, Isi FROM BeritaPedoman WHERE Tipe == ?";
 
         try (Connection conn = Connector.connect(); PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setString(1, pickBeritaPedoman);
@@ -59,8 +57,7 @@ public class BeritaPedoman {
             while (rs.next()){
                 System.out.println(rs.getString("Judul") + "\t" +
                                 rs.getString("Tanggal") + "\t" +
-                                rs.getString("isi") + "\t" +
-                                rs.getString("File"));
+                                rs.getString("isi"));
             }
             Connector.disconnect();
         } catch (SQLException e) {

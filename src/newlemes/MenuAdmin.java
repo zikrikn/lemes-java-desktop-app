@@ -26,7 +26,7 @@ public class MenuAdmin {
                 System.out.println("Isi Berita : ");
                 String newIsiBerita = scan.next();
                 
-                beritaPedoman.insertBeritaPedoman("Berita", newJudul, newIsiBerita, "Isi");
+                beritaPedoman.insertBeritaPedoman("Berita", newJudul, newIsiBerita);
 
                 
                 menu();
@@ -38,7 +38,7 @@ public class MenuAdmin {
                 String newIsiPedoman = scan.next();
                
 
-                beritaPedoman.insertBeritaPedoman("Pedoman", newJudul, newIsiPedoman, "Isi");
+                beritaPedoman.insertBeritaPedoman("Pedoman", newJudul, newIsiPedoman);
                 
                 menu();
                 pilih = scan.nextInt();
