@@ -66,8 +66,8 @@ public class BeritaPedoman {
     }
 
     public static void main(String[] args) {
-        // BeritaPedoman beritaPedoman = new BeritaPedoman();
-        // beritaPedoman.createTableBeritaPedoman();
+        BeritaPedoman beritaPedoman = new BeritaPedoman();
+        beritaPedoman.createTableBeritaPedoman();
         // beritaPedoman.insertBeritaPedoman("berita", "Judul", "Tanggal", "Isi", "File");
         // beritaPedoman.viewBeritaPedoman("berita");
     }
