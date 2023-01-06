@@ -118,9 +118,7 @@ public class MenuUser {
                 String namaKolam = scan.next();
                 
                 int[] numbers = kolam.findUsername(username, namaKolam);
-                System.out.println("Stock Pakan : " + numbers[0]);
-                System.out.println("Jumlah Pakan Harian : " + numbers[1]);
-
+                
                 try {
                     kolam.RestockPakan(username, namaKolam, numbers[0], numbers[1]);
                 } catch (ParseException e) {

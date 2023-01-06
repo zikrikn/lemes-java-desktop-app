@@ -64,8 +64,8 @@ public class Kolam {
             Connector.disconnect();
 
             // Untuk menambahkan data ke table db notifikasi, untuk harian dan panen
-            notifikasi.notifikasiIn(username, "Harian", waktuPanenKolam);
-            notifikasi.notifikasiIn(username, "Panen", waktuPanenKolam);
+            notifikasi.notifikasiIn(username, "Harian", namaKolam);
+            notifikasi.notifikasiIn(username, "Panen", namaKolam);
 
             System.out.println("Data Kolam Baru Berhasil Diinputkan!");
         } catch (SQLException e) {
@@ -158,7 +158,7 @@ public class Kolam {
             // Untuk menambahkan data ke table db notifikasi
             pstmt.executeUpdate();
             Connector.disconnect();
-            notifikasi.notifikasiIn(username, "Restock", waktuRestockPakan);
+            notifikasi.notifikasiIn(username, "Restock", namaKolam);
             System.out.println("Restock berhasil diupdate!");
         } catch (SQLException e) {
             System.out.println(e.getMessage());

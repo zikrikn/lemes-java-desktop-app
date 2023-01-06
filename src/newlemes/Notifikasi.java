@@ -9,7 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
+//import java.util.UUID;
 
 public class Notifikasi {
     //Satukan lewat disini jangan dipanggil satu-satu
@@ -20,19 +20,16 @@ public class Notifikasi {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
     String date = simpleDateFormat.format(new Date()); //this time now
 
-    //randomly generates a UUID  
-    UUID uuid = UUID.randomUUID();   
-    //converts the randomly generated UUID into String  
-    String uuidAsString = uuid.toString();  
-
     public void createTableNotifikasi() {
         String sql = "CREATE TABLE notifikasiIn (" +
-            "notifikasiID	TEXT NOT NULL PRIMARY KEY," +
+            "notifikasiID	INTEGER NOT NULL UNIQUE," +
+            "namaKolam      TEXT NOT NULL," +
             "username       TEXT NOT NULL," +
             "tipe	        TEXT NOT NULL," +
             "waktuMasuk	    TEXT NOT NULL," +
             "waktuKeluar	TEXT NOT NULL," +
             "messages       TEXT NOT NULL," +
+            "PRIMARY KEY (notifikasiID AUTOINCREMENT), " +
             "FOREIGN KEY (username) REFERENCES users(username));";
 
         try (Connection conn = Connector.connect(); 
@@ -46,13 +43,13 @@ public class Notifikasi {
     }
     
     //How about make new notifications
-    public void notifikasiIn(String username, String tipe, String waktuKeluar) throws ParseException{
-        String sql = "INSERT INTO notifikasiIn (notifikasiID, tipe, waktuMasuk, waktuKeluar, messages, username) VALUES (?,?,?,?,?,?)";
+    public void notifikasiIn(String username, String tipe, String namaKolam) throws ParseException{
+        String sql = "INSERT INTO notifikasiIn (namaKolam, tipe, waktuMasuk, waktuKeluar, messages, username) VALUES (?,?,?,?,?,?)";
 
         try (Connection conn = Connector.connect();
         PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
-            pstmt.setString(1, uuidAsString);
+            pstmt.setString(1, namaKolam);
             pstmt.setString(2, tipe);
             pstmt.setString(3, date);
             
@@ -71,7 +68,7 @@ public class Notifikasi {
 
                 pstmt.setString(4, dateAfter);
 
-                pstmt.setString(5, "Notifikasi harian aktif! Kamu akan mendapatkan notifikasi 3 kali sehari sampai tanggal" + waktuKeluar);
+                pstmt.setString(5, "Notifikasi harian aktif! Kamu akan mendapatkan notifikasi 3 kali sehari sampai waktu panen.");
             }else if (tipe.equals("Panen")){
                 //create instance of the Calendar class and set the date to the given date  
                 Calendar cal = Calendar.getInstance();  
@@ -143,10 +140,14 @@ public class Notifikasi {
     }
 
     public static void main(String[] args) {
-        // Notifikasi notifikasi = new Notifikasi();
-        // notifikasi.createTableNotifikasi();
+        Notifikasi notifikasi = new Notifikasi();
+        notifikasi.createTableNotifikasi();
 
-        // notifikasi.notifikasiIn("fikri", "Harian");
+        // try {
+        //     notifikasi.notifikasiIn("fikri", "Harian", "1");
+        // } catch (ParseException e) {
+        //     e.printStackTrace();
+        // }
         // notifikasi.notifikasiList("fikri");
     }
 }
